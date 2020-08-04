@@ -37,6 +37,8 @@ namespace API.Controllers
             Order.CreateTime = DateTime.Now;//时间
             Order.MemberID = Int32.Parse(MemberID);//用户ID
             Orderbll.Add(Order, orderVModel.Goods);
+
+
             //快递单号
             return new ResponsMessage<string>
             {
