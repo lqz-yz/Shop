@@ -1,0 +1,243 @@
+﻿
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>商品分类列表</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">首页</a></li>
+                    <li class="breadcrumb-item active">商品分类</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!-- /.card-header -->
+                <!-- form start -->
+                <div class="card-header">
+                    <a class="btn btn-sm btn-primary" href="/ProductCategory/add">添加商品分类</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="table" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th></th>
+                                        <th>序号</th>
+                                        <th>分类名称</th>
+                                        <th>排序号</th>
+                                        <th>关键字</th>
+                                        <th>分类图标</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+
+            </div>
+        </div>
+    </div>
+    @*<div class="modal fade" id="del-modal" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">提示框</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>是否删除数据???</p>
+                </div>
+                <div class="modal-footer " justify-content-between>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+                    <button type="button" class="btn btn-primary" onclick="del()">是</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>*@
+</section>
+@section js{
+    <script>
+    //function alertDelModal(id) {
+    //           //alert(alertDelModal)
+    //        delID = id;
+    //    $("del-modal").modal();
+    //       };
+            
+    //var delID = null
+   function del(id) {
+            //var code = $(".del").attr("code");
+            //alert(code);
+
+            var formData = new FormData();
+            formData.append("id", id)
+            //alert(id);
+            var r = confirm("是否删除")
+            if (r == true) {
+                $.ajax({
+                    url: "/ProductCategory/Delete",
+                    type: "POST",
+                    dateType: "json",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        if (result.state) {
+                            toastr.success('删除成功')
+                            $("#table").DataTable().ajax.reload();
+                        } else {
+                            toastr.error(result.msg)
+
+                        }
+                    },
+                    error: function (result) {
+                        toastr.error('删除失败')
+
+                    }
+
+                })
+
+            }
+            else {
+                toastr.success("您取消了操作");
+            }
+        }
+        $(function () {
+            $("#table").DataTable({
+                "lengthChange": false,//不显示每页更改大小的下拉框
+                "searching": false,//不显示搜索框
+                "paging": false,//禁止分页
+                "info": false,//不显示提示信息
+                "ordering": false,//禁止排序
+                "autoWidth": true,//宽度自适应
+                "processing": true,//开启加载等待
+                //设置中文提示
+                "language": {
+                    "processing": "请求数据中...",//加载数据提示的信息
+                    "zeroRecords": "没有数据",//无数据时提示信息
+                },
+                'treeGrid': {
+                    'left': 15,
+                    'expandIcon': '<span><i class="fa fa-plus-square"></i></span>',
+                    'collapseIcon': '<span><i class="fa fa-minus-square"></i></span>'
+                },
+                "serverSide": true,//开启服务端模式(数据从后台获取)
+                "ajax": function (data, callback, settings) {
+                    //封装请求参数
+                    var param = {};
+                    param.draw = data.draw;//服务端直接返回就可以,不需要更改
+                 
+                    $.ajax({
+                        type: "POST",//请求方式
+                        url: "/ProductCategory/GetAll",//请求地址
+                        cache: false,//禁用缓存
+                        data: param,//传入组装的参数
+                        dataType: "json",//期望服务端返回的数据格式(在回调函数中会自动将json串转化成js对象)
+                        success: function (result) {
+                            setTimeout(function () {
+                                callback(result);//渲染数据(固定写法)
+                                //$(".delbtn").on("click", function () {
+                                //    delID = $(this).attr("code")
+                                //    $("del-modal").modal()
+                                //})
+                                console.log(result)
+                            }, 500);
+                        }
+                    });
+                },
+                //设置数据映射
+                columns: [
+                    {
+                        className: 'treegrid-control',
+                        data: function (data) {
+                            if (data.children.length > 0) {
+                                return '<span><i class="fa fa-plus-square"></i></span>';
+                            }
+                            return '';
+                        }
+                    },
+                    { "data": "ID" },
+                    { "data": "Name" },
+                    { "data": "OrderNum" },
+                    { "data": "keyWords" },                  
+                    {
+                        "data": function (data) {
+                            console.log(JSON.parse(data.Img))
+                            JSON.parse(data.Img).forEach(v => {
+                                console.log(v.url)
+                                img=v.url
+                                 
+                            })
+                            //console.log(JSON.parse(data.Img).url)
+                            var html = "<img src=\"" + img + "\" style=\"width=\"50\" height=\"50\"\"  />";
+                            return html;
+                           
+                        }
+                    },
+
+                    {
+                        "data": function (data) {
+                            var html = "<a href=\"/ProductCategory/Update/" + data.ID + "\" class=\"btn btn-sm btn-primary\">编辑</a>";
+                            //console.log(data.Deep)
+                            //if (data.Deep== 3) {
+                            //         html += "&nbsp;&nbsp;"
+                            //    html += "<a href=\"/ProductAttrKey/List?id=" + data.ID + "\" class=\"btn btn-sm btn-info\">属性设置</a>";
+                            //       html += "&nbsp;&nbsp;"
+                            //    html += "<a href=\"/ProductAttrKeySku/List?id=" + data.ID + "\" class=\"btn btn-sm btn-info\">规格设置</a>";
+                            //      html += "&nbsp;&nbsp;"
+                            
+                            //}
+                           //Path设置只三级显示
+                           var path = data.Path
+                            console.log(data.Path)
+                            //console.log(path.split(',').length - 1)
+                            if (path.split(',').length== 3) {
+                                     html += "&nbsp;&nbsp;"
+                                html += "<a href=\"/ProductAttrKey/List?id=" + data.ID + "\" class=\"btn btn-sm btn-info\">属性设置</a>";
+                                   html += "&nbsp;&nbsp;"
+                                html += "<a href=\"/ProductAttrKeySku/List?id=" + data.ID + "\" class=\"btn btn-sm btn-info\">规格设置</a>";
+                                  html += "&nbsp;&nbsp;"
+                            
+                            }
+                            html += "&nbsp;&nbsp;"
+                            html +=  "<a href=\"#\" onclick=\"del(" + data.ID + ");\"  class = \"del btn btn-sm btn-danger\">删除</a>";
+                           
+                           // "<a href=\"\#\"  class=\"delbtn btn btn-sm btn-danger\"  code=" + data.ID + ">删除</a>";
+                            //onclick=\"alertDelModal(" + data.ID + ")\"
+                            return html;
+                        }
+                    }
+
+                ]
+            });
+            //$('#example2').DataTable({
+            //    "paging": true,
+            //    "lengthChange": false,
+            //    "searching": false,
+            //    "ordering": true,
+            //    "info": true,
+            //    "autoWidth": false,
+            //});
+        });
+    </script>
+}

@@ -1,0 +1,23 @@
+﻿1.在Model层添加EF类
+2.DAL层下新建TextDAL类,类涉及数据库的操作都要放到DAL层
+3.DAL层对Model层添加引用
+4.在DAL层中编写数据库操作相关代码
+
+ public void AddText()
+        {
+            //1.声明一个数据库上下文类
+            ShopEntities entities = new ShopEntities();
+            Text t1 = new Text();
+            t1.Name = "测试";
+            entities.Text.Add(t1);
+            entities.SaveChanges();
+        }
+
+5.在BLL层中新建TextBLL类,添加DAL的引用.并编写相关代码
+public void AddText()
+        {
+            TextDAL dal = new TextDAL();
+            dal.AddText();
+        }
+
+6.

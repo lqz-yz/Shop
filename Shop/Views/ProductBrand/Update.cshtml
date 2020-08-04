@@ -1,0 +1,368 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>商品品牌添加</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">首页</a></li>
+                    <li class="breadcrumb-item active">商品分类</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-info">
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form class="form-horizontal" id="form">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="Name" class="col-sm-2 col-form-label">品牌名称:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="BrandName" name="BrandName" placeholder="请输入品牌名称">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="LogoInitials" class="col-sm-2 col-form-label">品牌首字母:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="LogoInitials" name="LogoInitials" placeholder="请输入品牌首字母">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="BrandLogo" class="col-sm-2 col-form-label">品牌LOGO:</label>
+                            <div class="col-sm-10">
+                                <input type="file" name="BrandLogo" id="BrandLogo" width="100" height="100">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="BrandImg" class="col-sm-2 col-form-label">品牌专区大图:</label>
+                            <div class="col-sm-10">
+                                <input type="file" name="BrandImg" id="BrandImg" width="100" height="100">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="BrandStory" class="col-sm-2 col-form-label">品牌故事:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="BrandStory" name="BrandStory" placeholder="请输入品牌故事">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="OrderNum" class="col-sm-2 col-form-label">排序号:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="OrderNum" name="OrderNum" placeholder="请输入排序号">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="Display" class="col-sm-2 col-form-label">是否显示:</label>
+                            <div class="form-group clearfix row">
+                                <div class="icheck-primary   col-sm-6">
+                                    <input type="radio" id="r1" name="Display" checked="" value="1">
+                                    <label for="r1">
+                                        是
+                                    </label>
+                                </div>
+                                <div class="icheck-primary  col-sm-6">
+                                    <input type="radio" id="r2" name="Display" checked="" value="2">
+                                    <label for="r2" style="font-weight:normal">
+                                        否
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="form-group row">
+                                <label for="PID" class="col-sm-2 col-form-label">父级分类:</label>
+                                <div class="col-sm-10">
+                                    <select id="PID" name="PID" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                        <option value="0">请选择</option>
+                                        <option value="1">男装</option>
+                                        <option value="2">女装</option>
+                                        <option value="3">手机</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="Img" class="col-sm-2 col-form-label">分类图片:</label>
+                                <div class="col-sm-10">
+                                    <input type="file" name="Img" id="Img" width="100" height="100">
+                                </div>
+                            </div>*@
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">提交</button>
+                        <a href="/ProductBrand/List" class="btn btn-default float-right">返回</a>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+@section js{
+    <script>
+        //从展示穿id用的方法
+         $.getUrlParam = function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
+        var ImgUploadUrl="http://localhost:17114/Img/Upload"//图片方法单独出来
+        var BrandLogo = [], BrandImg = []
+        function init() {//修改初始化信息
+            var id = $.getUrlParam("id")//展示传来的id接受一下
+            $.ajax({
+                url: "/ProductBrand/Getone",
+                type: "GET",//查询用get  其它用post
+                cache: false,//禁用缓存
+                data: { id: id },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    //品牌名称
+                    $("#BrandName").val(data.Brand.BrandName)
+                    //品牌首字母
+                    $("#LogoInitials").val(data.Brand.LogoInitials)
+                    //var _BrandLogo = eval("("+ data.Brand.BrandLogo +")")
+                    //品牌LOGO  用的了图片的插件  插件带initialPreview方法为回显图片
+                    var BrandLogoIMG=JSON.parse(data.Brand.BrandLogo)
+                    console.log(BrandLogoIMG)
+                    var BrandLogoTag = ["<img src='" + BrandLogoIMG.url + "' style='width:200px' class='file-preview-image' >"]
+                    BrandLogo.push(data.Brand.BrandLogo)//修改不修改图片的时候吧之前的添加到里面防止为空
+                    $('#BrandLogo').fileinput({
+                        language: 'zh',//设置语言
+                        allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                        showUpload: true,//是否显示上传按钮
+                        browseclass: "btn btn-primary",//按钮样式
+                        dropZoneEnabled: false,//是否多图片上传
+                        uploadUrl: ImgUploadUrl,
+                        uploadAsync: true,//默认异步上传
+                        uploadExtraData: { imgType: 'BrandLogo' },//图片上传额外的参数
+                        initialPreview: BrandLogoTag //回显图片
+                    });
+                     //var _BrandImg = eval("("+ data.Brand.BrandImg +")")
+                    //品牌专区大图  用的了图片的插件  插件带initialPreview方法为回显图片
+                    var BrandImgIMG=JSON.parse(data.Brand.BrandImg)
+                    console.log(BrandImgIMG );
+                    var BrandImgTag = ["<img src='" + BrandImgIMG.url + "' style='width:200px' class='file-preview-image' >"]
+                     BrandImg.push(data.Brand.BrandImg)//修改不修改图片的时候吧之前的添加到里面防止为空
+                    $('#BrandImg').fileinput({
+                        language: 'zh',//设置语言
+                        allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                        showUpload: true,//是否显示上传按钮
+                        browseclass: "btn btn-primary",//按钮样式
+                        dropZoneEnabled: false,//是否多图片上传
+                        uploadUrl: ImgUploadUrl,
+                        uploadAsync: true,//默认异步上传
+                        uploadExtraData: { imgType: 'BrandImg' },//图片上传额外的参数
+                        initialPreview: BrandImgTag //回显图片
+
+                    });
+                    //品牌故事
+                    $("#BrandStory").val(data.Brand.BrandStory)
+                    //排序号
+                    $("#OrderNum").val(data.Brand.OrderNum)
+                    //是否显示  添加是选中框  网上搜索input回显
+                 //获取radio选中项的值
+                    $("input[name='Display'][value=" + data.Brand.Display + "]").prop("checked", true);
+                 //formData.append("Display", $("input[name='Display']:checked").val())
+                }
+             })
+              
+    }
+        //id="btn"
+       //添加规范
+        $('#form').validate({
+            rules: {
+                Name: {
+                    required: true
+                },
+                LogoInitials: {
+                    required: true
+                },
+                BrandStory: {
+                    required: true
+                },
+                OrderNum: {
+                    required: true,
+                    digits: true,
+
+                }
+            },
+            messages: {
+                Name: {
+                    required: "品牌名称必须填写"
+                },
+                LogoInitials: {
+                    required: "品牌首字母必须填写"
+                },
+                BrandStory: {
+                    required: "品牌故事必须填写"
+                },
+                OrderNum: {
+                    required: "排序号必须填写",
+                    digits: "排序号必须是整数",
+                },
+            },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.col-sm-10').append(error);
+                },
+                highlight: function (element,errorClass,validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                },
+
+            //验证成功的函数
+            submitHandler: function (form) {
+                //修改记得传id
+                 var id = $.getUrlParam("id")
+                 var formData = new FormData();
+                formData.append("ID",id)
+                 formData.append("BrandName", $("#BrandName").val())
+                 formData.append("LogoInitials", $("#LogoInitials").val())
+                 formData.append("BrandLogo",  BrandLogo)
+                 formData.append("BrandImg",  BrandImg)
+                 formData.append("BrandStory", $("#BrandStory").val())
+                 formData.append("OrderNum", $("#OrderNum").val())
+                 //获取radio选中项的值
+                 formData.append("Display", $("input[name='Display']:checked").val())
+                //var Display = $("input[name='Display']:checked").val();
+                console.log($("#Name").val())
+                console.log($("#LogoInitials").val())
+                console.log(BrandLogo)
+                console.log(BrandImg)
+                console.log($("#BrandStory").val())
+                console.log($("#OrderNum").val())
+                console.log($("input[name='Display']:checked").val())
+                console.log(id)
+            //alert("1")
+            //发起ajax请求
+            //alert("1")
+            $.ajax({
+                //指定请求地址
+                url: "/ProductBrand/Update",
+                //指定请求方式 POST  Get
+                type: "POST",
+                //期望服务端返回的数据格式(在回调函数中会自动将json串转化成js对象)
+                dataType: "json",
+                //向服务端发送的数据
+                data: formData,
+                //ajax传文件,一定要指定两个关键性的参数
+                contentType: false,//不用任何编码,因为formData对象自带编码
+                processData: false,//告诉浏览器不要处理该数据
+                //当请求成功的回调函数,一般会在接受服务端返回的数据
+                //{"State":true}(自动将json串转化成js对象,{State:true})
+                success: function (result) {//result参数代表服务端返回的数据
+                    if (result.State) {
+                        toastr.success('修改成功.')
+                        //document.getElementById("form").reset();
+                    } else {
+                        toastr.error(result.msg)
+                    }
+                },
+                //当请求失败的回调函数,一般会在接受服务端返回的数据
+                error: function (result) {//result参数代表服务端返回的数据
+                    toastr.error('修改失败.')
+                },
+            })
+            }
+        });
+
+        //
+        $(function () {
+            //设置上传插件
+           
+            //图片上传成功的回调函数
+            $("#BrandLogo").on('fileuploaded', function (event, data, previewId, index) {//异步上传成功结果处理
+                //var img = JSON.parse(data);//将服务端返回json字符串转换成js对象
+                //console.log(img)
+                // console.log(data.response)
+                BrandLogo.push(JSON.stringify(data.response[0]))
+                console.log(JSON.stringify(data.response[0]))
+            })
+            //图片上传失败的回调函数
+            $("#BrandLogo").on('fileerror', function (event, data, msg) {//异步上传失败结果处理
+                alert("上传失败");
+            });
+            //图片修改删除之前的图片
+            $("#BrandLogo").on('change', function (event) {
+                BrandLogo = []
+            })
+
+
+            //图片上传成功的回调函数
+            $("#BrandImg").on('fileuploaded', function (event, data, previewId, index) {//异步上传成功结果处理
+                //var img = JSON.parse(data);//将服务端返回json字符串转换成js对象
+                //console.log(img)
+                // console.log(data.response)
+                BrandImg.push(JSON.stringify(data.response[0]))
+                console.log(JSON.stringify(data.response[0]))
+            })
+            //图片上传失败的回调函数
+            $("#BrandImg").on('fileerror', function (event, data, msg) {//异步上传失败结果处理
+                alert("上传失败");
+            });
+            //图片修改删除之前的图片
+            $("#BrandImg").on('change', function (event) {
+                BrandImg = []
+    })
+
+
+        })
+        $('.select2').select2()
+
+        //回调函数
+
+        //$("#btn").on("click", function () {
+        //    //var ajaxData = {name:$("#name").val(),age:$("#age").val()}
+        //    ////alert("1")
+        //    ////发起普通ajax请求
+        //    //$.ajax({
+        //    //    //指定请求地址
+        //    //    url: "/ProductCategory/AjaxTextPost",
+        //    //    //指定请求方式 POST  Get
+        //    //    type: "POST",
+        //    //    //期望服务端返回的数据格式(在回调函数中会自动将json串转化成js对象)
+        //    //    dataType: "json",
+        //    //    //向服务端发送的数据
+        //    //    data: ajaxData,
+        //    //    //当请求成功的回调函数,一般会在接受服务端返回的数据
+        //    //    //{"State":true}(自动将json串转化成js对象,{State:true})
+        //    //    success: function (result) {//result参数代表服务端返回的数据
+        //    //        alert(result.State)
+        //    //        alert(result.data)
+        //    //    },
+        //    //     //当请求失败的回调函数,一般会在接受服务端返回的数据
+        //    //    error: function (result) {//result参数代表服务端返回的数据
+
+        //    //    },
+
+        //    //ajax文件上传
+        //    //ForData主要用来模拟一个表单对象,主要用于文件上传,存储键值对数据
+
+
+        init()
+
+        //})
+
+    </script>
+}
+
+
+
+
+

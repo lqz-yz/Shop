@@ -1,0 +1,403 @@
+﻿
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>商品规格列表</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">首页</a></li>
+                    <li class="breadcrumb-item active">商品规格分类</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!-- /.card-header -->
+                <!-- form start -->
+                <div class="card-header">
+                    <button class="btn btn-sm btn-primary" data-toggle="modal" id="alertAddModal">添加</button>
+                    <a class="btn btn-sm btn-primary" href="/ProductCategory/List">返回</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+
+                            <table style="width:100%" id="table" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                <thead>
+                                    <tr role="row">
+
+                                        <th>序号</th>
+                                        <th>规格名称</th>
+                                        <th>录入方式</th>
+                                        <th>是否存入图片</th>
+                                        <th>排序号</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+
+            </div>
+        </div>
+    </div><div class="modal fade" id="modal-lg" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-lg-title">规格添加</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="AttrName" class="col-sm-2 col-form-label">规格名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="AttrName" name="AttrName" placeholder="请输入规格名称">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="enterType" class="col-sm-2 col-form-label">录入方式:</label>
+                        <div class="form-group clearfix row">
+                            <div class="icheck-primary   col-sm-6">
+                                <input type="radio" id="r1" name="enterType" checked="" value="1">
+                                <label for="r1">
+                                    手动录入
+                                </label>
+                            </div>
+                            <div class="icheck-primary  col-sm-6">
+                                <input type="radio" id="r2" name="enterType" checked="" value="2">
+                                <label for="r2" style="font-weight:normal">
+                                    下拉选择
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="IsImg" class="col-sm-2 col-form-label">是否存入图片:</label>
+                        <div class="form-group clearfix row">
+                            <div class="icheck-primary   col-sm-6">
+                                <input type="radio" id="i1" name="IsImg" checked="" value="1">
+                                <label for="i1">
+                                    是
+                                </label>
+                            </div>
+                            <div class="icheck-primary  col-sm-6">
+                                <input type="radio" id="i2" name="IsImg" checked="" value="2">
+                                <label for="i2" style="font-weight:normal">
+                                    否
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">规范值列表:</label>
+                        <div class="col-sm-10" id="attrValues">
+                            <div class="main">
+                                <button class="btn btn-primary add" id="addAttrValues">添加</button>
+                                @*//<input type="button" value="添加" class="btn btn-primary add" />*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OrderNum" class="col-sm-2 col-form-label">排序号:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="OrderNum" name="OrderNum" placeholder="请输入排序号">
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                        <button type="button" class="btn btn-primary" id="btnOK">确定</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+</section>
+@section js{
+    <script>
+        //
+        $.getUrlParam = function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
+        var opreateFlag = 1;//1添加,2修改
+        var editId;
+        function alertEditModal(id) {
+            opreateFlag = 2;
+            editId = id;
+            //alert(id)
+             //弹出添加的model窗体,,#后是要弹出窗体的ID
+            $("#modal-lg").modal()
+            //修改标题.jquery获取(设置)div,span,h[1-6]标签的内容用text方法,获取(设置)input,select标签的内容用val方法
+            $("#modal-lg-title").text("规格修改")
+            //从后台获取数据并显示出来
+            $.ajax({
+                type: "GET",//请求方式
+                url: "/ProductAttrKeySku/GetOne",//请求地址
+                cache: false,//禁用缓存
+                data: { id: id },//传入组装的参数
+                dataType: "json",//期望服务端返回的数据格式(在回调函数中会自动将json串转化成js对象)
+                success: function (result) {
+                    //遇到数据不显示可以先后台打印看看
+                    $("#AttrName").val(result.attrkey.AttrName)
+                    $("#OrderNum").val(result.attrkey.OrderNum)
+                    //获取radio选中项的值
+                    $("input[name='enterType'][value=" + result.attrkey.EnterType + "]").prop("checked", true);
+                    $("input[name='IsImg'][value=" + result.attrkey.IsImg + "]").prop("checked", true);
+                    $('#attrValues div:gt(1)').remove();//删除div  先清空属性值, :gt(n)获取n个之后的所有元素包括第n个,n从0开始
+                    result.attrValue.map(function (v) {
+                        //console.log(v.AttrValue)
+                        var html =   "<div class=\"form-group row\" style=\"margin-top:10px\">" +
+                        "<div class=\"col-sm-6\"><input type=\"text\" class=\"form-control\" value=\"" + v.AttrValue + "\"></div >"+
+                            "<div class=\"col-sm-4\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"delinput(this)\">删除</button></div ></div > ";
+                        $(".main").append(html);
+                    })
+                }
+            });
+        }
+        function del(id) {
+                 //var code = $(".del").attr("code");
+                 //alert(code);
+
+                 var formData = new FormData();
+                 formData.append("id", id)
+                 //alert(id);
+                 var r = confirm("是否删除")
+                 if (r == true) {
+                     $.ajax({
+                         url: "/ProductAttrKeySku/Delete",
+                         type: "POST",
+                         dateType: "json",
+                         data:formData,//传入组装的参数
+                         contentType: false,
+                         processData: false,
+                         success: function (result) {
+                             if (result.state) {
+                                 toastr.success('删除成功')
+                                 $("#table").DataTable().ajax.reload();
+                             } else {
+                                 toastr.error(result.msg)
+
+                             }
+                         },
+                         error: function (result) {
+                             toastr.error('删除失败')
+
+                         }
+
+                     })
+
+                 }
+                 else {
+                     toastr.success("您取消了操作");
+                 }
+       }
+       function delinput(obj) {
+           $(obj).parent().parent().remove();
+       }
+        $(function () {
+            //添加弹出框
+            $("#alertAddModal").click(function () {
+                opreateFlag = 1;
+                $(" #AttrName").val("");
+                $(" #OrderNum").val("");
+                $("input[name='enterType'][value='1']").prop("checked", "checked");
+                $("input[name='IsImg'][value='1']").prop("checked", "checked");
+                // $("input[name='enterType']:checked").val();
+                $('#attrValues div:gt(1)').remove();
+                $("#modal-lg").modal();
+                $("#modal-lg-title").text("规格添加");
+            });
+
+                   $(document).ready(function(){
+                       $(".add").click(function () {
+
+                         var html = '  <div class="form-group row" style="margin-top:10px"><div class="col-sm-6"><input type="text" class="form-control"></div><div class="col-sm-4"><button type="button" class="btn btn-primary" onclick="delinput(this)">删除</button></div></div>';
+                         $(".main").append(html);
+         });
+                   });
+            $("#btnOK").click(function () {
+                //1 收集数据
+                var AttrName = $("#AttrName").val()
+                var OrderNum = $("#OrderNum").val()
+                //获取radio选中项的值
+                var EnterType = $("input[name='enterType']:checked").val();
+                var IsImg = $("input[name='IsImg']:checked").val();
+                //获取所有元素
+                //each相当于for循环
+                var attrValues = []
+                $("#attrValues input").each(function () {
+                    attrValues.push($(this).val())
+                    //alert($(this).val())
+                })
+                //var ProductCategoryID=@ViewBag.PrProductCategoryID;
+                var ProductCategoryID = $.getUrlParam('id');
+                //alert(ProductCategoryID)
+
+                var data = {
+                    AttrName: AttrName,
+                    OrderNum: OrderNum,
+                    EnterType: EnterType,
+                    IsImg:IsImg,
+                    AttrValues: attrValues,
+                    ProductCategoryID: ProductCategoryID
+                }
+                console.log(data)
+                //data = {
+                //    AttrName: "aaa",
+                //    OrderNum: 1,
+                //    EnterType: 2,
+                //    AttrValues: ["a","b","c"],
+                //    ProductCategoryID:1
+                //}
+                var url = "/ProductAttrKeySku/Add"
+                var msg="添加成功"
+                if (opreateFlag == 2) {
+                    data.ID = editId
+                    msg="修改成功"
+                   url = "/ProductAttrKeySku/Edit"
+                }
+                //2 ajax请求
+                $.ajax({
+                    //指定请求地址
+                    url: url,
+                    //指定请求方式 POST  Get
+                    type: "POST",
+                    //期望服务端返回的数据格式(在回调函数中会自动将json串转化成js对象)
+                    dataType: "json",
+                    //向服务端发送的数据
+                    data: JSON.stringify(data),//将js对象序列化json字符串
+                    contentType: "application/json;charset=utf-8",//指定数据的类型为json
+                    //当请求成功的回调函数,一般会在接受服务端返回的数据
+                    //{"State":true}(自动将json串转化成js对象,{State:true})
+                    success: function (result) {//result参数代表服务端返回的数据
+                        if (result.State) {
+                            toastr.success(msg)
+                            document.getElementById("form").reset();
+                        } else {
+                            toastr.error(result.msg)
+                        }
+                    },
+                    //当请求失败的回调函数,一般会在接受服务端返回的数据
+                    error: function (result) {//result参数代表服务端返回的数据
+                        toastr.error('添加失败.')
+
+                    }
+
+                });
+            });
+
+                 $("#table").DataTable({
+                     "lengthChange": false,//不显示每页更改大小的下拉框
+                     "searching": false,//不显示搜索框
+                     "paging": false,//禁止分页
+                     "info": false,//不显示提示信息
+                     "ordering": false,//禁止排序
+                     "autoWidth": true,//宽度自适应
+                     "processing": true,//开启加载等待
+                     //设置中文提示
+                     "language": {
+                         "processing": "请求数据中...",//加载数据提示的信息
+                         "zeroRecords": "没有数据",//无数据时提示信息
+                     },
+                     ////树形结构
+                     //'treeGrid': {
+                     //    'left': 15,
+                     //    'expandIcon': '<span><i class="fa fa-plus-square"></i></span>',
+                     //    'collapseIcon': '<span><i class="fa fa-minus-square"></i></span>'
+                     //},
+                     "serverSide": true,//开启服务端模式(数据从后台获取)
+                     "ajax": function (data, callback, settings) {
+                         //封装请求参数
+                         var param = {};
+                         param.draw = data.draw;//服务端直接返回就可以,不需要更改
+                         param.categoryId = $.getUrlParam('id');
+                         $.ajax({
+                             type: "POST",//请求方式
+                             url: "/ProductAttrKeySku/GetByCategoryID",//请求地址
+                             cache: false,//禁用缓存
+                             data: param,//传入组装的参数
+                             dataType: "json",//期望服务端返回的数据格式(在回调函数中会自动将json串转化成js对象)
+                             success: function (result) {
+                                 setTimeout(function () {
+                                     callback(result);//渲染数据(固定写法)
+                                     //$(".delbtn").on("click", function () {
+                                     //    delID = $(this).attr("code")
+                                     //    $("del-modal").modal()
+                                     //})
+                                 }, 500);
+                             }
+                         });
+                     },
+                     //设置数据映射
+                     columns: [
+
+                         { "data": "ID" },
+                         { "data": "AttrName" },
+                         {
+                             "data": function (data) {
+                                 if (data.EnterType == "1") {
+                                     return "手工录入"
+                                 } else {
+                                       return "下拉选择"
+                                 }
+                             }
+
+                         },
+                         {
+                             "data": function (data) {
+                                 if (data.IsImg == "1") {
+                                     return "是"
+                                 } else {
+                                       return "否"
+                                 }
+                             }
+
+                             },
+                         { "data": "OrderNum" },
+
+                         {
+                             "data": function (data) {
+                                 var html = "<button  class=\"btn btn-sm btn-primary\" onclick=\"alertEditModal("+data.ID+")\">编辑</button>";
+
+                                 html += "&nbsp;&nbsp;"
+                                 html +=  "<a href=\"#\" onclick=\"del(" + data.ID + ");\"  class = \"del btn btn-sm btn-danger\">删除</a>";
+
+                                // "<a href=\"\#\"  class=\"delbtn btn btn-sm btn-danger\"  code=" + data.ID + ">删除</a>";
+                                 //onclick=\"alertDelModal(" + data.ID + ")\"
+                                 return html;
+                             }
+                         }
+
+                     ]
+                 });
+                 $('#example2').DataTable({
+                     "paging": true,
+                     "lengthChange": false,
+                     "searching": false,
+                     "ordering": true,
+                     "info": true,
+                     "autoWidth": false,
+                 });
+             });
+    </script>
+}

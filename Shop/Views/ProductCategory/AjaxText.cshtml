@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+
+@*<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AjaxText</title>
+    <script src="/Statics/adminlte/plugins/jquery/jquery.min.js"></script>
+</head>*@
+
+    <div>
+        <label>姓名:<input type="text" name="name" id="name" value="" /></label>
+        <label>年龄:<input type="text" name="age" id="age" value="" /></label>
+        <label>图片:<input type="file" name="file" id="file" value="" /></label>
+    </div>
+    <div>
+        <button id="btn">Ajax测试</button>
+    </div>
+
+
+    @section js{
+        <script>
+            //回调函数
+            $(function () {
+                $("#btn").on("click", function () {
+                    //var ajaxData = {name:$("#name").val(),age:$("#age").val()}
+                    ////alert("1")
+                    ////发起普通ajax请求
+                    //$.ajax({
+                    //    //指定请求地址
+                    //    url: "/ProductCategory/Add",
+                    //    //指定请求方式 POST  Get
+                    //    type: "POST",
+                    //    //期望服务端返回的数据格式(在回调函数中会自动将json串转化成js对象)
+                    //    dataType: "json",
+                    //    //向服务端发送的数据
+                    //    data: ajaxData,
+                    //    //当请求成功的回调函数,一般会在接受服务端返回的数据
+                    //    //{"State":true}(自动将json串转化成js对象,{State:true})
+                    //    success: function (result) {//result参数代表服务端返回的数据
+                    //        alert(result.State)
+                    //        alert(result.data)
+                    //    },
+                    //     //当请求失败的回调函数,一般会在接受服务端返回的数据
+                    //    error: function (result) {//result参数代表服务端返回的数据
+
+                    //    },
+                    //ajax文件上传
+                    //ForData主要用来模拟一个表单对象,主要用于文件上传,存储键值对数据
+                    var formData = new FormData();
+
+                    formData.append("name", $("#name").val())
+                    formData.append("age", $("#age").val())
+                    formData.append("file", $("#file")[0].files[0])
+                    //console.log(formData)
+                    //alert("1")
+                    //发起ajax请求
+                    $.ajax({
+                        //指定请求地址
+                        url: "/ProductCategory/AjaxTextPost",
+                        //指定请求方式 POST  Get
+                        type: "POST",
+                        //期望服务端返回的数据格式(在回调函数中会自动将json串转化成js对象)
+                        dataType: "json",
+                        //向服务端发送的数据
+                        data: formData,
+                        //ajax传文件,一定要指定两个关键性的参数
+                        contentType: false,//不用任何编码,因为formData对象自带编码
+                        processData: false,//告诉浏览器不要处理该数据
+                        //当请求成功的回调函数,一般会在接受服务端返回的数据
+                        //{"State":true}(自动将json串转化成js对象,{State:true})
+                        success: function (result) {//result参数代表服务端返回的数据
+                            if (result.State) {
+                                toastr.success('添加成功.')
+                            } else {
+                                toastr.error('添加失败.')
+                            }
+                        },
+                        //当请求失败的回调函数,一般会在接受服务端返回的数据
+                        error: function (result) {//result参数代表服务端返回的数据
+                            toastr.error('添加失败.')
+
+                        },
+
+                    })
+                })
+            })
+</script>
+           
+}
