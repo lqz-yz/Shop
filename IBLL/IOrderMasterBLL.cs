@@ -9,6 +9,8 @@ namespace IBLL
 {
   public interface IOrderMasterBLL : IBaseBLL<OrderMaster>
     {
-        int Add(OrderMaster OrderMaster,  List<OrderSchedule> OrderSchedule);
+        string Add(OrderMaster OrderMaster,  List<OrderSchedule> OrderSchedule);
+        //int Add(OrderVModel orderVModel);
+        
     }
 }

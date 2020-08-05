@@ -81,84 +81,14 @@ namespace API.Controllers
             //2.根据oppenid检测数据库是否包含该用户,没有测添加到数据库中
             //判断数据库中是否存在该用户(根据openid查询)
             //如果没有,使用ef往member表中添加用户数据
-            var result = Bll.Search(x => x.OpenId == openid).ToList();
-            if (result.Count == 0)
+            var member = Bll.Search(x => x.OpenId == openid).First();
+            if (member == null)
             {
                 mem = memberVModel.userInfo;
                 mem.OpenId = openid;
                 Bll.Add(mem);
+                member = mem;
             }
-            //else
-            //{
-
-            //}
-
-
-
-            ////1.生成头部（Header）
-            //var header = new Dictionary<string, object>
-            // {
-            //     { "alg", "HmacSHA256" },
-            //     { "typ","JWT" },
-            // };
-            //string headerjson = JsonConvert.SerializeObject(header);
-            //string Header = Base64Helper.EncodeBase64(headerjson);
-
-            ////2.生成载荷（payload）
-
-            ////将系统时间转换成UNIX时间戳
-            ////DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
-            ////DateTime dtNow = DateTime.Parse(DateTime.Now.ToString());
-            ////TimeSpan toNow = dtNow.Subtract(dtStart);
-            ////string timeStamp = toNow.Ticks.ToString();
-            ////timeStamp = timeStamp.Substring(0, timeStamp.Length - 7);
-            ////Response.Write(timeStamp);
-            ////生成时间Unix时间戳
-            //DateTime issued = DateTime.Parse(DateTime.Now.ToString());
-            //string iat = issued.Ticks.ToString();
-            //iat = iat.Substring(0, iat.Length - 7);
-
-            ////结束时间Unix时间戳
-            //DateTime expires = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.Now.AddDays(7));
-            //string exp = expires.Ticks.ToString();
-            //exp = exp.Substring(0, exp.Length - 7);
-
-
-            ////DateTime expires = DateTime.Parse((DateTime.Now.AddDays(7) - DateTime.Now).ToString());
-            //var payload = new Dictionary<string, object> {
-            //     // 包括需要传递的用户信息；
-
-            //    { "iss", "Online JWT Builder"},//iss: 该JWT的签发者，一般是服务器，是否使用是可选的；
-            //    { "iat", iat},//iat(issued at): 在什么时候签发的(UNIX时间)，是否使用是可选的；
-            //    { "exp", exp},//exp(expires): 什么时候过期，这里是一个Unix时间戳，是否使用是可选的；
-            //    { "aud", "www.baidu.com"},//aud: 接收该JWT的一方，是否使用是可选的；
-            //    { "sub", "uid"},//sub: 该JWT所面向的用户，userid，是否使用是可选的；
-            //    { "nickname", memberVModel.userInfo.NickName},
-            //    { "username", memberVModel.userInfo.NickName}
-            //};
-
-            //string payloadjson = JsonConvert.SerializeObject(payload);
-            //string Payload = Base64Helper.EncodeBase64(payloadjson);
-
-
-            ////3.生成签名（signature）
-            //string secret = "~!@$%&*()";
-            //var encodedString = Payload + '.' + Header;
-            //var signature = HmacSHA256(secret,encodedString);
-
-
-            //var token= encodedString+'.'+signature;
-
-
-            ////3.生成token(最常用的两种方式:MD5加密,jwt)
-            //string yan = "~!@$%&*()";
-            //string time = DateTime.Now.ToString("yyyyMMddHHmmssfffff");
-            //string guid = Guid.NewGuid().ToString("N");
-            //string random = new Random().Next(10000, 99999).ToString();
-            //string nickName = memberVModel.userInfo.NickName;
-
-            //string str = yan + time + guid + random + nickName;
-            //string token = Md5Helper.Md5(Md5Helper.Md5(str));
 
             var payload = new Dictionary<string, string> //模拟到时候服务器想接收的数据
             {
@@ -183,7 +113,7 @@ namespace API.Controllers
             //db.StringSet(token, openid, DateTime.Now.AddDays(7) - DateTime.Now);
             ////redis如果不设置有效期,默认是永远有效(内村足够用)
 
-            RedisHelper.Set(token, openid, DateTime.Now.AddDays(7) - DateTime.Now);
+            RedisHelper.Set(token, member.ID, DateTime.Now.AddDays(7) - DateTime.Now);
 
             //将token存在redis中
 

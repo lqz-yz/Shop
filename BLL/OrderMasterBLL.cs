@@ -15,7 +15,7 @@ namespace BLL
     {
         IOrderScheduleDAL OrderScheduleDAL = new OrderScheduleDAL();
 
-        public int Add(OrderMaster OrderMaster,  List<OrderSchedule> OrderSchedule)
+        public string Add(OrderMaster OrderMaster,  List<OrderSchedule> OrderSchedule)
         {
             var result = 0;
             var tran = dal.BeginTrane();
@@ -39,7 +39,7 @@ namespace BLL
                 tran.Rollback();
             }
 
-            return result;
+            return result > 0 ? OrderMaster.OrderNumber : null;
         }
     }
 }
