@@ -10,8 +10,5 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
-   public class NumberBLL : BaseBLL<Number, NumberDAL>, INumberBLL
-    {
   
-    }
 }

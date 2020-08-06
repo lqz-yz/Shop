@@ -14,7 +14,7 @@ namespace BLL
    public class OrderMasterBLL : BaseBLL<OrderMaster, OrderMasterDAL>, IOrderMasterBLL
     {
         IOrderScheduleDAL OrderScheduleDAL = new OrderScheduleDAL();
-
+        IProductSkuDAL ProductSku = new ProductSkuDAL();
         public string Add(OrderMaster OrderMaster,  List<OrderSchedule> OrderSchedule)
         {
             var result = 0;
@@ -30,7 +30,15 @@ namespace BLL
                 {
                     Order.OrderMasterID = OrderMaster.ID;
                     OrderScheduleDAL.Add(Order);
+                    var skus = ProductSku.Search(x => x.ID == Order.SkuID).FirstOrDefault();
+                    skus.Stock = skus.Stock - Order.ProductNum;
+                    ProductSku.Update(skus);
                 }
+               // result += SaveChanges();
+                //foreach (var sku in OrderSchedule)
+                //{
+                    
+                //}
                 result += SaveChanges();
                 tran.Commit();//总提交
             }
