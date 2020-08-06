@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="INumberBLL.cs" />
     <Compile Include="IMemberBLL.cs" />
     <Compile Include="IAdminBLL.cs" />
     <Compile Include="IBaseBLL.cs" />

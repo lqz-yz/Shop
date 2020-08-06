@@ -57,6 +57,9 @@
     <Compile Include="Member.cs">
       <DependentUpon>Shop.tt</DependentUpon>
     </Compile>
+    <Compile Include="Number.cs">
+      <DependentUpon>Shop.tt</DependentUpon>
+    </Compile>
     <Compile Include="OrderMaster.cs">
       <DependentUpon>Shop.tt</DependentUpon>
     </Compile>

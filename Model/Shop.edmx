@@ -28,6 +28,14 @@
           <Property Name="OpenId" Type="varchar" MaxLength="5000" />
           <Property Name="Phone" Type="varchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="Number">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" />
+          <Property Name="CurrentNumber" Type="int" />
+        </EntityType>
         <EntityType Name="OrderMaster">
           <Key>
             <PropertyRef Name="ID" />
@@ -153,6 +161,7 @@
         <EntityContainer Name="ShopModelStoreContainer">
           <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Member" EntityType="Self.Member" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Number" EntityType="Self.Number" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderMaster" EntityType="Self.OrderMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderSchedule" EntityType="Self.OrderSchedule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
@@ -181,6 +190,7 @@
           <EntitySet Name="Member" EntityType="ShopModel.Member" />
           <EntitySet Name="OrderMaster" EntityType="ShopModel.OrderMaster" />
           <EntitySet Name="OrderSchedule" EntityType="ShopModel.OrderSchedule" />
+          <EntitySet Name="Number" EntityType="ShopModel.Number" />
         </EntityContainer>
         <EntityType Name="ProductCategory">
           <Key>
@@ -326,6 +336,14 @@
           <Property Name="ProductID" Type="Int32" />
           <Property Name="ProductNum" Type="Int32" />
           <Property Name="ProductPrice" Type="Decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="Number">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" />
+          <Property Name="CurrentNumber" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -486,6 +504,15 @@
                 <ScalarProperty Name="ProductNum" ColumnName="ProductNum" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="OrderMasterID" ColumnName="OrderMasterID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Number">
+            <EntityTypeMapping TypeName="ShopModel.Number">
+              <MappingFragment StoreEntitySet="Number">
+                <ScalarProperty Name="CurrentNumber" ColumnName="CurrentNumber" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

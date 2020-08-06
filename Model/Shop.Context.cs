@@ -37,5 +37,6 @@ namespace Model
         public virtual DbSet<Member> Member { get; set; }
         public virtual DbSet<OrderMaster> OrderMaster { get; set; }
         public virtual DbSet<OrderSchedule> OrderSchedule { get; set; }
+        public virtual DbSet<Number> Number { get; set; }
     }
 }

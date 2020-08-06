@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="IBaseDAL.cs" />
     <Compile Include="IAdminDAL.cs" />
+    <Compile Include="INumberDAL.cs" />
     <Compile Include="IMemberDAL.cs" />
     <Compile Include="IOrderMasterDAL.cs" />
     <Compile Include="IOrderScheduleDAL.cs" />
