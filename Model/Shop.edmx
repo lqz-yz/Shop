@@ -58,6 +58,7 @@
           <Property Name="ProductID" Type="int" />
           <Property Name="ProductNum" Type="int" />
           <Property Name="ProductPrice" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SkuID" Type="int" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -336,6 +337,7 @@
           <Property Name="ProductID" Type="Int32" />
           <Property Name="ProductNum" Type="Int32" />
           <Property Name="ProductPrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SkuID" Type="Int32" />
         </EntityType>
         <EntityType Name="Number">
           <Key>
@@ -500,6 +502,7 @@
           <EntitySetMapping Name="OrderSchedule">
             <EntityTypeMapping TypeName="ShopModel.OrderSchedule">
               <MappingFragment StoreEntitySet="OrderSchedule">
+                <ScalarProperty Name="SkuID" ColumnName="SkuID" />
                 <ScalarProperty Name="ProductPrice" ColumnName="ProductPrice" />
                 <ScalarProperty Name="ProductNum" ColumnName="ProductNum" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />

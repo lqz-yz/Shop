@@ -19,5 +19,6 @@ namespace Model
         public Nullable<int> ProductID { get; set; }
         public Nullable<int> ProductNum { get; set; }
         public Nullable<decimal> ProductPrice { get; set; }
+        public Nullable<int> SkuID { get; set; }
     }
 }
