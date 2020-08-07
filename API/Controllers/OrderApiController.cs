@@ -47,7 +47,7 @@ namespace API.Controllers
             return new ResponsMessage<string>
             {
                 Code = 200,
-                Data = OrderNum
+                Data = Order.OrderNumber
             };
         }
     }

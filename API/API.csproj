@@ -221,6 +221,7 @@
     <Compile Include="Models\ProductApiModel.cs" />
     <Compile Include="Models\ResponsMessage.cs" />
     <Compile Include="Models\SearchVModel.cs" />
+    <Compile Include="Models\TokenVModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -82,6 +82,7 @@ namespace Test
             string jhdh = Createnumber(2);
 
             Console.WriteLine(jhdh);
+            Console.WriteLine(DateTime.Now.ToString("HHmmssfffff"));
             Console.ReadLine();
 
         }
@@ -92,13 +93,22 @@ namespace Test
             ShopEntities shopEntities = new ShopEntities();
             //1.根据类型查询当前流水号
             //Type:1-销售订单
-
             int currentNumber = 1;
+           
+                
             Random random = new Random();//随机数
             var number = shopEntities.Number.Where(x => x.Type == type).FirstOrDefault();
             if (number != null)
             {
-                currentNumber = number.CurrentNumber.Value + 1;
+                //十二点重置
+                if (DateTime.Now.ToString("HHmmssfffff") == DateTime.Now.ToString("00000000000"))
+                {
+                    currentNumber = 1;
+                }
+                else {
+                    currentNumber = number.CurrentNumber.Value + 1;
+                }
+                
                 //将currentNumber更新到数据库
                 number.CurrentNumber = currentNumber;
                 shopEntities.SaveChanges();//执行Updata操作

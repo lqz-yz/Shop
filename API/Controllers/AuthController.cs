@@ -50,7 +50,7 @@ namespace API.Controllers
 
         [Route("api/auth/gettoken")]
         [HttpPost]
-        public ResponsMessage<string> GetToken(MemberVModel memberVModel)
+        public ResponsMessage<TokenVModel> GetToken(MemberVModel memberVModel)
         {
             //获取oppid
             //C#6.0字符串插值
@@ -81,24 +81,22 @@ namespace API.Controllers
             //2.根据oppenid检测数据库是否包含该用户,没有测添加到数据库中
             //判断数据库中是否存在该用户(根据openid查询)
             //如果没有,使用ef往member表中添加用户数据
-            var member = Bll.Search(x => x.OpenId == openid).First();
-            if (member == null)
+            int uid;
+            var memberlist = Bll.Search(x => x.OpenId == openid);
+            if (memberlist.Count ==0)
             {
                 mem = memberVModel.userInfo;
                 mem.OpenId = openid;
                 Bll.Add(mem);
-                member = mem;
+                //memberlist = mem;
+                uid = mem.ID;
             }
-
-            var payload = new Dictionary<string, string> //模拟到时候服务器想接收的数据
+            else
             {
-                { "username", memberVModel.userInfo.NickName+ Guid.NewGuid().ToString("N")}
-            };
-            IJsonSerializer serializer = new JsonNetSerializer();
-            IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
-            IJwtAlgorithm algorithm = new HMACSHA256Algorithm();
-            IJwtEncoder encoder = new JwtEncoder(algorithm, serializer, urlEncoder);
-            var token = encoder.Encode(payload, secret);
+                uid = memberlist[0].ID;
+            }
+            string token, refreshToken;
+             CreateToken(uid, out token, out refreshToken);
 
 
             ////4.将token存入redis
@@ -113,17 +111,79 @@ namespace API.Controllers
             //db.StringSet(token, openid, DateTime.Now.AddDays(7) - DateTime.Now);
             ////redis如果不设置有效期,默认是永远有效(内村足够用)
 
-            RedisHelper.Set(token, member.ID, DateTime.Now.AddDays(7) - DateTime.Now);
+            DateTime expire = DateTime.Now.AddDays(7);
+            DateTime now = DateTime.Now;
+            RedisHelper.Set(token, uid, expire - now);
+            RedisHelper.Set(refreshToken, uid, expire.AddDays(7) - now);
+            //将token存在redis中（refreshToken过期时间一般为token的两倍）
 
-            //将token存在redis中
-
-
-            return new ResponsMessage<string>
+            return new ResponsMessage<TokenVModel>()
             {
                 Code = 200,
-                Data = token
-            };
+                Message = "请求成功",
+                Data = new TokenVModel()
+                {
+                    Token = token,
+                    RefreshToken = refreshToken,
+                    Expire = (int)(expire - now).TotalMilliseconds,
+                    RefreshExpire = (int)(expire.AddDays(7) - now).TotalMilliseconds
+                }
+        };
 
+        }
+
+        [Route("api/auth/gettokenByrefreshToken")]
+        [HttpGet]
+        public ResponsMessage<TokenVModel> GetTokenByRefeshToken(string rToken) {
+            //验证refreshToken是否过期
+            var memberID = RedisHelper.Get(rToken).ToString();
+            if (memberID==null) {
+                return new ResponsMessage<TokenVModel>()
+                {
+                    Code = 401,
+                    Message = "refreshToken失效,请重新授权",
+                };
+            }
+            string token, refreshToken; 
+            CreateToken(Int32.Parse(memberID), out token, out refreshToken);
+
+
+            DateTime expire = DateTime.Now.AddDays(7);
+            DateTime now = DateTime.Now;
+            RedisHelper.Set(token, Int32.Parse(memberID), expire - now);
+            RedisHelper.Set(refreshToken, Int32.Parse(memberID), expire.AddDays(7) - now);
+            return new ResponsMessage<TokenVModel>()
+            {
+                Code = 200,
+                Message = "请求成功",
+                Data = new TokenVModel()
+                {
+                    Token = token,
+                    RefreshToken = refreshToken,
+                    Expire = (int)(expire - now).TotalMilliseconds,
+                    RefreshExpire= (int)(expire.AddDays(7) - now).TotalMilliseconds
+                }
+            };
+        }
+        private void CreateToken(int memberID,out string token, out string refreshToken)
+        {
+            Random random = new Random();
+            var payload = new Dictionary<string, string> //模拟到时候服务器想接收的数据
+            {
+                { "username", memberID+random.Next(10000,99999).ToString()+ Guid.NewGuid().ToString("N")}
+            };
+            IJsonSerializer serializer = new JsonNetSerializer();
+            IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
+            IJwtAlgorithm algorithm = new HMACSHA256Algorithm();
+            IJwtEncoder encoder = new JwtEncoder(algorithm, serializer, urlEncoder);
+             token = encoder.Encode(payload, secret);
+            //RefreshToken
+             payload = new Dictionary<string, string> //模拟到时候服务器想接收的数据
+            {
+                { "username", memberID+random.Next(100000,999999).ToString()+ Guid.NewGuid().ToString("N")}
+            };
+            refreshToken = encoder.Encode(payload, secret);
+            //return token,RefreshToken;
         }
 
         [AuthFilter]
