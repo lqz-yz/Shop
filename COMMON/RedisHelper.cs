@@ -14,10 +14,16 @@ namespace COMMON
         //2.指定操作的数据库
         static IDatabase db = conn.GetDatabase(0);
         //写入
-        public static void Set(string key, int value,TimeSpan timeSpan) {
+        //public static  void Set(string key, int value,TimeSpan timeSpan) {
+        //    //3.写入数据
+        //    //设置name的有效期为15天
+        //    db.StringSet(key, value, timeSpan);
+        //}
+        public static bool Set(string key, int value, TimeSpan timeSpan)
+        {
             //3.写入数据
             //设置name的有效期为15天
-            db.StringSet(key, value, timeSpan);
+            return db.StringSet(key, value, timeSpan);
         }
         //读取
         public static string Get(string key)
