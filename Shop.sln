@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Img", "Img\Img.csproj", "{62DD97AC-B49E-4C0A-AFEC-85E2B3792033}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "webform", "webform", "{3C7A37FB-160C-4C8E-B04E-1CF5654B75E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebformDome1", "WebformDome1\WebformDome1.csproj", "{63522A20-ADBA-485E-B029-953B13D34D83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,9 +79,16 @@ Global
 		{62DD97AC-B49E-4C0A-AFEC-85E2B3792033}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62DD97AC-B49E-4C0A-AFEC-85E2B3792033}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62DD97AC-B49E-4C0A-AFEC-85E2B3792033}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63522A20-ADBA-485E-B029-953B13D34D83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63522A20-ADBA-485E-B029-953B13D34D83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63522A20-ADBA-485E-B029-953B13D34D83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63522A20-ADBA-485E-B029-953B13D34D83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{63522A20-ADBA-485E-B029-953B13D34D83} = {3C7A37FB-160C-4C8E-B04E-1CF5654B75E5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF8AAAD9-D99A-47E6-9583-A580A560F16B}

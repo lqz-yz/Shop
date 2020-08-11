@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StackExchange.Redis;
 using System.IO;
+using System.Threading;
 
 namespace Test
 {
@@ -75,55 +76,160 @@ namespace Test
             //Console.WriteLine(j);
 
 
-            string xsdh = Createnumber(1);
+            //string xsdh = Createnumber(1);
 
-            Console.WriteLine(xsdh);
+            //Console.WriteLine(xsdh);
 
-            string jhdh = Createnumber(2);
+            //string jhdh = Createnumber(2);
 
-            Console.WriteLine(jhdh);
-            Console.WriteLine(DateTime.Now.ToString("HHmmssfffff"));
+            //Console.WriteLine(jhdh);
+            //Console.WriteLine(DateTime.Now.ToString("HHmmssfffff"));
+
+
+            ////C#实现线程编程
+
+            ////声明一个线程
+            //Thread thread = new Thread(F1);
+            //thread.Start();//启动一个线程thread线程执行完毕才会继续往下执行
+
+            ////线程阻塞
+            //thread.Join();//主线程会等待
+
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    Console.WriteLine("y");
+            //}
+
+
+            //2.task
+
+            //声明一个task,没有返回值并开始异步操作
+            //Task task = Task.Run(() =>
+            //{
+
+            //    for (int i = 0; i < 100; i++)
+            //    {
+            //        Console.WriteLine("x");
+            //    }
+            //    return "heelo word";
+            //});
+
+            ////声明一个task,有返回值(task类型为泛型类型)并开始异步操作
+            //Task<string> task = Task.Run(() =>
+            //{
+
+            //    for (int i = 0; i < 10; i++)
+            //    {
+            //        Console.WriteLine("aaa");
+            //    }
+            //    return "heelo word";
+            //});
+
+
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    Console.WriteLine("111");
+            //}
+            //Console.WriteLine(task.Result);//遇到task.Result会产生一个阻塞,等待异步任务执行完才会继续往下执行
+
+
+           Task<string> ts= F1();
+
+            Console.WriteLine(ts.Result);
+            for (int i = 0; i < 20; i++)
+            {
+                Console.WriteLine("111");
+              
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                Console.WriteLine("222");
+            }
             Console.ReadLine();
 
         }
 
-        private static string Createnumber(int type)
+        //async:标识该方法内部会有至少一个异步任务
+        //async修饰的方法内必须包含一个await运算符,await后一般跟一个异步任务
+        //async修饰方法返回值:void  task  task<>
+        //void,task不用返回值
+        //task<T>:直接返回T类型值
+        public async static Task<string> F1()
         {
-            //单号自动生成
-            ShopEntities shopEntities = new ShopEntities();
-            //1.根据类型查询当前流水号
-            //Type:1-销售订单
-            int currentNumber = 1;
+            //主线程在执行第一个for循环
+            for (int i = 0; i < 20; i++)
+            {
+                Console.WriteLine("aaa");
+                //Thread.Sleep(200);
+            }
+            //遇到await开辟之后会从线程池中取一个线程执行await之后的所有代码
+            await Task.Run(() =>
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    Console.WriteLine("bbb");
+                   
+                }
+            });
+            await Task.Run(() =>
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    Console.WriteLine("ccc");
+
+                }
+            });
+            //await也会产生一个阻塞,等待await之后的异步任务执行结束之后再往下继续执行
+            for (int i = 0; i < 20; i++)
+            {
+                Console.WriteLine("ddd");
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                Console.WriteLine("fff");
+            }
+            return "helllll";
+        }
+            
+        }
+        //private static string Createnumber(int type)
+        //{
+        //    //单号自动生成
+        //    ShopEntities shopEntities = new ShopEntities();
+        //    //1.根据类型查询当前流水号
+        //    //Type:1-销售订单
+        //    int currentNumber = 1;
            
                 
-            Random random = new Random();//随机数
-            var number = shopEntities.Number.Where(x => x.Type == type).FirstOrDefault();
-            if (number != null)
-            {
-                //十二点重置
-                if (DateTime.Now.ToString("HHmmssfffff") == DateTime.Now.ToString("00000000000"))
-                {
-                    currentNumber = 1;
-                }
-                else {
-                    currentNumber = number.CurrentNumber.Value + 1;
-                }
+        //    Random random = new Random();//随机数
+        //    var number = shopEntities.Number.Where(x => x.Type == type).FirstOrDefault();
+        //    if (number != null)
+        //    {
+        //        //十二点重置
+        //        if (DateTime.Now.ToString("HHmmssfffff") == DateTime.Now.ToString("00000000000"))
+        //        {
+        //            currentNumber = 1;
+        //        }
+        //        else {
+        //            currentNumber = number.CurrentNumber.Value + 1;
+        //        }
                 
-                //将currentNumber更新到数据库
-                number.CurrentNumber = currentNumber;
-                shopEntities.SaveChanges();//执行Updata操作
-            }
-            else
-            {
-                Number number1 = new Number();
-                number1.Type = type;
-                number1.CurrentNumber = currentNumber;
-                shopEntities.Number.Add(number1);
-                shopEntities.SaveChanges();
-            }
-            string dh = DateTime.Now.ToString("yyyyMMddHHmmssfffff") + random.Next(10000, 99999) + currentNumber.ToString().PadLeft(5, '0');//PadLeft(5,'0')左部充五位数,补充树0
-            return dh;
-        }
+        //        //将currentNumber更新到数据库
+        //        number.CurrentNumber = currentNumber;
+        //        shopEntities.SaveChanges();//执行Updata操作
+        //    }
+        //    else
+        //    {
+        //        Number number1 = new Number();
+        //        number1.Type = type;
+        //        number1.CurrentNumber = currentNumber;
+        //        shopEntities.Number.Add(number1);
+        //        shopEntities.SaveChanges();
+        //    }
+        //    string dh = DateTime.Now.ToString("yyyyMMddHHmmssfffff") + random.Next(10000, 99999) + currentNumber.ToString().PadLeft(5, '0');//PadLeft(5,'0')左部充五位数,补充树0
+        //    return dh;
+        //}
 
         // 小张类
         //public class MrZhang
@@ -159,4 +265,4 @@ namespace Test
         //}
 
     }
-}
+
