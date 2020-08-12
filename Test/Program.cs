@@ -89,6 +89,15 @@ namespace Test
             ////C#实现线程编程
 
             ////声明一个线程
+            //Thread thread = new Thread(() =>
+            //{
+
+            //    for (int i = 0; i < 100; i++)
+            //    {
+            //        Console.WriteLine("x");
+            //    }
+            //    return "heelo word";
+            //});
             //Thread thread = new Thread(F1);
             //thread.Start();//启动一个线程thread线程执行完毕才会继续往下执行
 
@@ -125,8 +134,6 @@ namespace Test
             //    return "heelo word";
             //});
 
-
-
             //for (int i = 0; i < 10; i++)
             //{
             //    Console.WriteLine("111");
@@ -134,7 +141,7 @@ namespace Test
             //Console.WriteLine(task.Result);//遇到task.Result会产生一个阻塞,等待异步任务执行完才会继续往下执行
 
 
-           Task<string> ts= F1();
+            Task<string> ts= F1();
 
             Console.WriteLine(ts.Result);
             for (int i = 0; i < 20; i++)
