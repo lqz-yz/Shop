@@ -12,7 +12,7 @@ namespace BLL
 {
     public class ProductCategoryBLL : BaseBLL<ProductCategory, ProductCategoryDAL>, IProductCategoryBLL
     {
-
+        //当一个类包含一个具体的类时会发生依赖耦合关系
         public List<ProductCategory> GetSub(int id)
         {
 
