@@ -35,8 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebAppli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication2", "WebApplication2\WebApplication2.csproj", "{3DF4BFC3-60B7-4E57-A0A7-E44C4E019BC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlModel", "MySqlModel\MySqlModel.csproj", "{342E9B49-7A49-4CF3-B483-65F0D77DF218}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,10 +97,6 @@ Global
 		{3DF4BFC3-60B7-4E57-A0A7-E44C4E019BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF4BFC3-60B7-4E57-A0A7-E44C4E019BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF4BFC3-60B7-4E57-A0A7-E44C4E019BC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{342E9B49-7A49-4CF3-B483-65F0D77DF218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{342E9B49-7A49-4CF3-B483-65F0D77DF218}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{342E9B49-7A49-4CF3-B483-65F0D77DF218}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{342E9B49-7A49-4CF3-B483-65F0D77DF218}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
