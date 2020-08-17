@@ -27,6 +27,9 @@ namespace WebformDome1
                 //第一次请求(只要是get请求都算第一次请求)
                 LoadData();
             }
+            Session["name"] = "lqz";
+            Response.Cookies.Add(new HttpCookie("name", "lqz"));
+            Application["age"] = 10;
         }
 
         private void LoadData()

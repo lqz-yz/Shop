@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace Test
 {
-    class Person:Animal
+    class student {
+        public string name { get; set; }
+        public int age { get; set; }
+    }
+    class Person
     {
+        public string name { get; set; }
+        public int age { get; set; }
+        public void Eat() {
+            Console.WriteLine("111111111111");
+        }
+
     }
 }
