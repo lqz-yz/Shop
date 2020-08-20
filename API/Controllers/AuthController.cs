@@ -211,6 +211,7 @@ namespace API.Controllers
                 }
             };
         }
+        //token的生成
         private void CreateToken(int memberID,out string token, out string refreshToken)
         {
             Random random = new Random();

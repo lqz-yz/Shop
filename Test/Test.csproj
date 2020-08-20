@@ -89,6 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractClass.cs" />
     <Compile Include="Animal.cs" />
     <Compile Include="Duck.cs" />
     <Compile Include="Employer.cs" />
